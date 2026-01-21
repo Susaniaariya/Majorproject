@@ -16,6 +16,7 @@ const User = require("./models/user.js"); // Ensure this path is correct
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/YatraStay";
 
+
 // --- Connect to MongoDB ---
 mongoose.connect(MONGO_URL)
     .then(() => console.log("Connected to DB"))
@@ -75,6 +76,18 @@ app.use("/listings", listingRouter);
 app.use("/listings", reviewRouter);
 
 
+const Listing = require("./models/listing");
+
+app.get("/test-listings", async (req, res) => {
+  try {
+    const listings = await Listing.find({}).populate("owner");
+    console.log("Listings from DB:", listings);
+    res.send(listings);
+  } catch (err) {
+    console.log(err);
+    res.send("Error fetching listings");
+  }
+});
 
 
 // --- 404 handler ---
